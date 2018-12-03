@@ -12,6 +12,7 @@ var unlocked;
 var doorH;
 var circle;
 var control;
+var pg1,pg2;
 
 // function preload(){
 //   circle = loadAnimation("Circle1.png","Circle7.png");
@@ -19,6 +20,8 @@ var control;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  pg1 = true;
+  pg2 = false;
   triangleControl = true;
   squareControl = false;
   squareJump = false;
@@ -31,6 +34,9 @@ function setup() {
   floor.addImage(loadImage('ground-01.png'));
   floor2 = createSprite(600, 300);
   floor2.addImage(loadImage('ground-01.png'));
+
+  floor3 = createSprite(800, 800);
+  floor3.addImage(loadImage('groundFinish-01.png'));
   beam1 = 0;
   beam1a = 0;
   doorH = 300;
@@ -45,6 +51,7 @@ function setup() {
 
 
 function draw() {
+  if(pg1){
   background(200);
   triangle.velocity.x = 0;
   square.velocity.x = 0;
@@ -88,7 +95,7 @@ function draw() {
   //triangle.position.y+=30;
   if (keyIsDown(70)) {
     if (tC == blue) {
-      triangle.addAnimation('normal', "TrimanB1.png", "TrimaneB9.png");
+      triangle.addAnimation('normal', "TrimanB1.png", "TrimanB9.png");
       control.addAnimation('normal', "TrimanB1.png", "TrimanB9.png");
     } else if (tC == green) {
       triangle.addAnimation('normal', "TrimanG1.png", "TrimanG9.png");
@@ -146,7 +153,7 @@ function draw() {
   if (keyIsDown(71)) {
 
     if (tC == blue)
-      triangle.addAnimation('normal', "TrimanB1_Sleep.png", "TrimaneB4_Sleep.png");
+      triangle.addAnimation('normal', "TrimanB1_Sleep.png", "TrimanB4_Sleep.png");
     else if (tC == green)
       triangle.addAnimation('normal', "TrimanG1_Sleep.png", "TrimanG4_Sleep.png");
     else if (tC == red)
@@ -172,23 +179,31 @@ function draw() {
   // else{
   //   control.addAnimation('normal',"Circle1.png","Circle7.png" );
   // }
-  if (floor.overlapPixel(triangle.position.x, triangle.position.y + 30) == false && floor2.overlapPixel(triangle.position.x, triangle.position.y + 30) == false)
+  if (floor.overlapPixel(triangle.position.x, triangle.position.y + 30) == false && floor2.overlapPixel(triangle.position.x, triangle.position.y + 30) == false&&floor3.overlapPixel(triangle.position.x, triangle.position.y + 30) == false)
     triangle.velocity.y += GRAVITY;
-  if (floor.overlapPixel(triangle.position.x, triangle.position.y + 30) || floor2.overlapPixel(triangle.position.x, triangle.position.y + 30)) {
+  if (floor.overlapPixel(triangle.position.x, triangle.position.y + 30) || floor2.overlapPixel(triangle.position.x, triangle.position.y + 30)||floor3.overlapPixel(triangle.position.x, triangle.position.y + 30)) {
     triangle.position.y--;
     triangle.velocity.y = 0;
     triangleJump = true;
   } else {
     triangleJump = false;
   }
-  if (floor.overlapPixel(square.position.x, square.position.y + 30) == false && floor2.overlapPixel(square.position.x, square.position.y + 30) == false)
+  if (floor.overlapPixel(square.position.x, square.position.y + 30) == false && floor2.overlapPixel(square.position.x, square.position.y + 30) == false && floor3.overlapPixel(square.position.x, square.position.y + 30) == false)
     square.velocity.y += GRAVITY;
-  if (floor.overlapPixel(square.position.x, square.position.y + 30) || floor2.overlapPixel(square.position.x, square.position.y + 30)) {
+  if (floor.overlapPixel(square.position.x, square.position.y + 30) || floor2.overlapPixel(square.position.x, square.position.y + 30) || floor3.overlapPixel(square.position.x, square.position.y + 30)) {
     square.position.y--;
     square.velocity.y = 0;
     squareJump = true;
   } else {
     squareJump = false;
+  }
+  if( floor3.overlapPixel(square.position.x, square.position.y + 30)){
+    pg1 = false;
+    pg2 = true;
+  }
+  if( floor3.overlapPixel(triangle.position.x, triangle.position.y + 30)){
+    pg1 = false;
+    pg2 = true;
   }
   noStroke();
   if (beam1 <= 300)
@@ -269,5 +284,10 @@ function draw() {
   noStroke();
   fill(0, 0, 200);
   ellipse(800, 213, 50, 50);
-
+}
+if(pg2){
+background(255);
+textSize(30);
+text("Level complete!", 500,500);
+}
 }
